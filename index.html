@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quiniela N°57</title>
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Quiniela Tama">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#243562">
+
+<style>
+  :root{--azul:#243562;--dorado:#8a6a1f;--claro:#b9c7e6;--verde:#1f9d55;--sel:#f2c230}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fbf0d0;font-family:system-ui,Arial,sans-serif;color:#111}
+  .wrap{max-width:520px;margin:0 auto;padding:12px}
+  .head{background:var(--azul);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border:2px solid #111}
+  .head h1{margin:0;font-size:24px;flex:1;margin-left:12px}
+  .mark{height:64px;width:auto;flex:none}
+  .head .n{font-size:26px;font-weight:800}
+  .nombre{display:flex;border:2px solid #111;border-top:0}
+  .nombre label{background:var(--azul);color:#fff;font-weight:800;padding:12px;font-size:16px}
+  .nombre input{flex:1;border:0;padding:12px;font-size:17px;min-width:0}
+  .cols{display:grid;grid-template-columns:minmax(0,1fr) 62px minmax(0,1fr);background:var(--dorado);color:#fff;font-weight:800;text-align:center;border:2px solid #111;border-top:0}
+  .cols div{padding:10px 2px}
+  .row{display:grid;grid-template-columns:minmax(0,1fr) 62px minmax(0,1fr);border:2px solid #111;border-top:0}
+  .row:nth-child(even){background:var(--claro)}
+  .row:nth-child(odd){background:#fff}
+  .cell{border:0;background:transparent;font:800 15px system-ui;padding:10px 4px;text-transform:uppercase;cursor:pointer}
+  .cell.draw{border-left:2px solid #111;border-right:2px solid #111;font-size:18px;color:#555}
+  .cell.on{background:var(--sel);color:#000}
+  .cell:not(.draw){display:flex;align-items:center;justify-content:center;gap:6px}
+  .logo{width:42px;height:42px;object-fit:contain;flex:none}
+  .ini{width:42px;height:42px;border-radius:50%;background:var(--azul);color:#fff;font-size:14px;display:inline-flex;align-items:center;justify-content:center;flex:none}
+  .foot{display:grid;grid-template-columns:1fr auto;background:var(--dorado);color:#fff;border:2px solid #111;border-top:0;padding:12px 14px;align-items:center;gap:8px}
+  .foot b{font-size:28px}
+  #cd{font-weight:700}
+  .btn{display:block;width:100%;margin-top:12px;background:var(--verde);color:#fff;border:0;border-radius:14px;padding:16px;font-size:18px;font-weight:800}
+  .btn:disabled{background:#999}
+  .msg{margin:10px 2px;font-weight:600;color:#a11}
+  .msg.ok{color:#116b38}
+  .nav{display:flex;gap:8px;margin-bottom:8px}
+  .nav a{flex:1;text-align:center;padding:10px;border:2px solid #111;border-radius:10px;font-weight:800;color:#111;text-decoration:none;background:#fff}
+  .nav a.on{background:var(--sel)}
+  .cell span:not(.ini){min-width:0}
+  [hidden]{display:none !important}
+  .acciones{display:grid;grid-template-columns:1fr 1fr 1.3fr;gap:8px;margin-top:12px}
+  .btn2{border:2px solid #111;border-radius:14px;padding:14px 6px;font-size:15px;font-weight:800;line-height:1.15;color:#fff;cursor:pointer}
+  .btn2.claro{background:#fff;color:#111}
+  .btn2.azul{background:#2a5bd7}
+  .btn2.verde{background:var(--verde)}
+  .btn2:disabled{background:#999;color:#fff;border-color:#777}
+  .ayuda{font-size:13px;color:#5b4a1a;margin:8px 2px}
+  .guardados{display:flex;align-items:center;gap:8px;background:#fff;border:2px solid #111;border-radius:12px;padding:10px 12px;margin-top:10px}
+  .gl{flex:1;font-weight:800}
+  .pill{border:2px solid #111;border-radius:999px;padding:4px 12px;font-weight:800;background:#e8f5ec}
+  .gcaja{background:#fff;border:2px solid #111;border-radius:12px;margin-top:10px;overflow:hidden}
+  .gh{background:var(--azul);color:#fff;font-weight:800;padding:10px 12px}
+  .vacio{padding:12px;color:#666;font-size:14px}
+  .gitem{border-top:1px solid #bbb;padding:8px 10px}
+  .gtop{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .gnom{flex:1;font-weight:700;word-break:break-word;min-width:120px}
+  .mini{border:2px solid #111;border-radius:8px;background:#fff;font-weight:700;font-size:13px;padding:6px 9px;cursor:pointer}
+  .mini.rojo{background:#c0392b;color:#fff}
+  .gdet{font-size:13px;padding:6px 2px 0}
+  .gdet div{padding:2px 0;border-bottom:1px dotted #ccc}
+  .confirma{background:#fff3c4;border:2px solid #111;border-radius:12px;padding:12px;margin-top:10px;font-weight:700}
+  .cbtns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  @media (max-width:400px){.logo,.ini{width:34px;height:34px}.ini{font-size:12px}.cell{font-size:13px;gap:4px}}
+  .lema{background:var(--dorado);color:#fff;text-align:center;font-weight:700;padding:10px;border:2px solid #111;border-top:0;font-size:14px;margin-top:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav"><a class="on">Llenar quiniela</a><a href="lista.html">Lista oficial</a></div>
+  <div class="head"><img class="mark" src="logo.png" alt="" onerror="this.remove()"><h1 id="titulo"></h1><div class="n" id="num"></div></div>
+  <div class="nombre"><label for="nombre">NOMBRE:</label><input id="nombre" autocomplete="name" maxlength="40"></div>
+  <div class="cols"><div>LOCAL</div><div>EMP.</div><div>VISITA</div></div>
+  <div id="partidos"></div>
+  <div class="foot"><div>Cierre: <span id="cierreTxt"></span><br><span id="cd"></span></div><b id="precio"></b></div>
+  <div class="lema">APUESTA POR TU PASIÓN, GANA POR TU EQUIPO</div>
+  <div class="msg" id="msg"></div>
+  <div class="acciones">
+    <button class="btn2 claro" id="aleatorio" type="button">Aleatorio</button>
+    <button class="btn2 azul" id="guardarBtn" type="button">Guardar</button>
+    <button class="btn2 verde" id="enviar" type="button">Enviar por WhatsApp</button>
+  </div>
+  <div class="ayuda">¿Vas a jugar varias? Llena una quiniela y toca <b>Guardar</b>. Repite las veces que quieras y al final toca <b>Enviar</b> para mandarlas todas juntas. <b>Aleatorio</b> llena los partidos por ti.</div>
+  <div class="guardados"><span class="gl">Guardados</span><span class="pill" id="gq">0 q</span><span class="pill" id="gtotal">$0.00</span></div>
+  <div class="confirma" id="confirma" hidden>
+    <div id="confirmaTxt"></div>
+    <div class="cbtns"><button class="btn2 verde" id="cSi" type="button">Sí, ya las envié</button><button class="btn2 claro" id="cNo" type="button">No, enviar otra vez</button></div>
+  </div>
+  <div class="gcaja"><div class="gh" id="gtitulo">Quinielas guardadas (0)</div><div id="glista"></div></div>
+  <button class="btn" id="nueva" type="button" style="background:#243562">Limpiar lo que estoy llenando</button>
+</div>
+
+<script>
+// ===== CONFIGURACIÓN: edita solo esta parte cada jornada =====
+const CONFIG = {
+  titulo: "Quiniela Tama",
+  numero: 58,
+  precio: "$25.00",
+  telefono: "523411209957",              // WhatsApp que recibe las quinielas (52 + 10 dígitos)
+  cierre: "2026-10-29T21:00:00-06:00",   // Jueves 29 oct, 9:00 PM hora de México
+  cierreTxt: "JUEVES 5 NOV 9:00 PM",
+  partidos: [
+   ["San Luis","Juárez"],["Necaxa","Xolos"],["Atlante","Santos"],["Atlas","Pachuca"],
+    ["Tigres","C. Azul"],["Toluca","Monterrey"],["UNAM","América"],["Atl. Madrid","Barcelona"],
+    ["Querétaro","Puebla"],["León","Chivas"]
+  ]
+};
+// =============================================================
+
+const $ = id => document.getElementById(id);
+const picks = Array(CONFIG.partidos.length).fill(null);
+const KEY = "quiniela-" + CONFIG.numero;
+
+$("titulo").textContent = CONFIG.titulo;
+$("num").textContent = "N°" + CONFIG.numero;
+$("precio").textContent = CONFIG.precio;
+$("cierreTxt").textContent = CONFIG.cierreTxt;
+document.title = CONFIG.titulo + " N°" + CONFIG.numero;
+
+// Escudo: busca logos/<equipo>.png (ej. logos/juarez.png, logos/cazul.png).
+// Si no existe el archivo, muestra un círculo con las iniciales.
+function escudo(nombre) {
+  const slug = nombre.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+  const img = document.createElement("img");
+  img.className = "logo";
+  img.alt = "";
+  img.src = `logos/${slug}.png`;
+  img.onerror = () => {
+    const s = document.createElement("span");
+    s.className = "ini";
+    s.textContent = nombre.replace(/[^A-Za-zÁÉÍÓÚÑáéíóúñ ]/g, "").split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase();
+    img.replaceWith(s);
+  };
+  return img;
+}
+
+// Dibuja los partidos
+const cont = $("partidos");
+CONFIG.partidos.forEach(([l, v], i) => {
+  const row = document.createElement("div");
+  row.className = "row";
+  [["L", l], ["E", "X"], ["V", v]].forEach(([val, txt]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "cell" + (val === "E" ? " draw" : "");
+    if (val === "E") b.textContent = txt;
+    else {
+      const t = document.createElement("span");
+      t.textContent = txt;
+      b.append(...(val === "L" ? [escudo(txt), t] : [t, escudo(txt)]));
+    }
+    b.dataset.i = i; b.dataset.v = val;
+    b.onclick = () => { picks[i] = val; pintar(); guardar(); };
+    row.appendChild(b);
+  });
+  cont.appendChild(row);
+});
+
+function pintar() {
+  document.querySelectorAll(".cell").forEach(b => {
+    b.classList.toggle("on", picks[b.dataset.i] === b.dataset.v);
+  });
+}
+function guardar() {
+  try { localStorage.setItem(KEY, JSON.stringify({ nombre: $("nombre").value, picks })); } catch (e) {}
+}
+function cargar() {
+  try {
+    const d = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (d) { $("nombre").value = d.nombre || ""; d.picks.forEach((p, i) => picks[i] = p); }
+  } catch (e) {}
+  pintar();
+}
+$("nombre").addEventListener("input", guardar);
+
+// Cuenta regresiva y bloqueo al cierre
+const cierre = new Date(CONFIG.cierre).getTime();
+function tick() {
+  const ms = cierre - Date.now();
+  if (ms <= 0) {
+    $("cd").textContent = "CERRADA";
+    $("enviar").disabled = true;
+    $("guardarBtn").disabled = true;
+    $("aleatorio").disabled = true;
+    $("enviar").textContent = "Quiniela cerrada";
+    return;
+  }
+  const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5),
+        m = Math.floor(ms % 36e5 / 6e4), s = Math.floor(ms % 6e4 / 1e3);
+  $("cd").textContent = `Faltan ${d}d ${h}h ${m}m ${s}s`;
+}
+setInterval(tick, 1000); tick();
+
+// ===== Varias quinielas: guardar, aleatorio y enviar todas juntas =====
+const PRECIO = parseFloat(String(CONFIG.precio).replace(/[^0-9.]/g, "")) || 0;
+const dinero = n => "$" + n.toFixed(2);
+const KEYG = "quiniela-guardadas-" + CONFIG.numero;
+const MAX_ENVIO = 8;   // máximo de quinielas por mensaje de WhatsApp
+let guardadas = [];
+try { guardadas = JSON.parse(localStorage.getItem(KEYG) || "[]") || []; } catch (e) { guardadas = []; }
+function persistir() { try { localStorage.setItem(KEYG, JSON.stringify(guardadas)); } catch (e) {} }
+function aviso(t, ok) { const m = $("msg"); m.className = "msg" + (ok ? " ok" : ""); m.textContent = t || ""; }
+const nomPick = (i, p) => p === "L" ? CONFIG.partidos[i][0] : p === "V" ? CONFIG.partidos[i][1] : "Empate";
+const vacio = () => picks.every(p => !p);
+
+function validar() {
+  if (!$("nombre").value.trim()) { aviso("Escribe tu nombre."); $("nombre").focus(); return false; }
+  const faltan = picks.map((p, i) => p ? null : i + 1).filter(Boolean);
+  if (faltan.length) { aviso("Te faltan los partidos: " + faltan.join(", ")); return false; }
+  return true;
+}
+function guardarActual() {
+  if (!validar()) return false;
+  guardadas.push({ id: Date.now() + "-" + Math.random().toString(36).slice(2), nombre: $("nombre").value.trim(), picks: picks.slice() });
+  persistir();
+  picks.fill(null);            // se queda el nombre para la siguiente
+  guardar(); pintar(); pintarGuardadas();
+  return true;
+}
+
+// Aleatorio: completa los partidos vacíos; si ya estaban todos llenos, vuelve a sortear
+function aleatorio() {
+  const completa = picks.every(Boolean);
+  picks.forEach((p, i) => {
+    if (completa || !p) { const r = Math.random(); picks[i] = r < 0.38 ? "L" : r < 0.62 ? "E" : "V"; }
+  });
+  pintar(); guardar(); aviso("");
+}
+
+function pintarGuardadas() {
+  $("gq").textContent = guardadas.length + " q";
+  $("gtotal").textContent = dinero(guardadas.length * PRECIO);
+  $("gtitulo").textContent = "Quinielas guardadas (" + guardadas.length + ")";
+  const L = $("glista"); L.innerHTML = "";
+  if (!guardadas.length) { const v = document.createElement("div"); v.className = "vacio"; v.textContent = "Aún no has guardado ninguna."; L.appendChild(v); return; }
+  guardadas.forEach((q, n) => {
+    const it = document.createElement("div"); it.className = "gitem";
+    const top = document.createElement("div"); top.className = "gtop";
+    const nom = document.createElement("span"); nom.className = "gnom"; nom.textContent = (n + 1) + ". " + q.nombre;
+    const det = document.createElement("div"); det.className = "gdet"; det.hidden = true;
+    CONFIG.partidos.forEach(([l, v], i) => {
+      const d = document.createElement("div");
+      d.textContent = (i + 1) + ". " + l + " vs " + v + ": " + nomPick(i, q.picks[i]);
+      det.appendChild(d);
+    });
+    const mk = (txt, cls, fn) => { const b = document.createElement("button"); b.type = "button"; b.className = "mini " + cls; b.textContent = txt; b.onclick = fn; return b; };
+    top.append(nom,
+      mk("Ver", "", () => { det.hidden = !det.hidden; }),
+      mk("Editar", "", () => {
+        if (!vacio() && !confirm("Se reemplazará lo que tienes en pantalla. ¿Continuar?")) return;
+        $("nombre").value = q.nombre; picks.splice(0, picks.length, ...q.picks);
+        guardadas.splice(n, 1); persistir(); guardar(); pintar(); pintarGuardadas(); aviso("");
+        window.scrollTo(0, 0);
+      }),
+      mk("Quitar", "rojo", () => {
+        if (!confirm("¿Quitar la quiniela de " + q.nombre + "?")) return;
+        guardadas.splice(n, 1); persistir(); pintarGuardadas();
+      }));
+    it.append(top, det);
+    L.appendChild(it);
+  });
+}
+
+function textoQuiniela(q) {
+  const lineas = CONFIG.partidos.map(([l, v], i) => `${i + 1}. ${l} vs ${v}: ${nomPick(i, q.picks[i])}`);
+  return `*${CONFIG.titulo} N°${CONFIG.numero}*\nNombre: ${q.nombre}\n\n${lineas.join("\n")}`;
+}
+
+let enviadaEn = 0, enviando = 0;
+function enviarTodas() {
+  aviso("");
+  if (!vacio() && !guardarActual()) return;           // lo que está en pantalla se guarda; si está a medias, avisa
+  if (!guardadas.length) { aviso("Llena una quiniela para poder enviarla."); return; }
+  const lote = guardadas.slice(0, MAX_ENVIO);
+  const texto = lote.map(textoQuiniela).join("\n\n") + "\n\n" +
+    (lote.length > 1 ? `Total a pagar: ${dinero(lote.length * PRECIO)} (${lote.length} quinielas)` : `Total: ${CONFIG.precio}`);
+  enviadaEn = Date.now(); enviando = lote.length;
+  // Dentro de la app usa el puente; en el navegador abre wa.me
+  if (window.Puente && Puente.enviarWhatsApp) Puente.enviarWhatsApp(CONFIG.telefono, texto);
+  else window.open(`https://wa.me/${CONFIG.telefono}?text=${encodeURIComponent(texto)}`, "_blank");
+}
+
+function limpiar() {
+  picks.fill(null);
+  $("nombre").value = "";
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  pintar(); aviso("");
+  window.scrollTo(0, 0);
+}
+function terminarEnvio() {
+  guardadas.splice(0, enviando); persistir();
+  const quedan = guardadas.length; enviando = 0;
+  $("confirma").hidden = true;
+  pintarGuardadas();
+  if (!quedan) { limpiar(); aviso("✓ Quinielas enviadas. Ya puedes llenar otra.", true); }
+  else aviso(`✓ Enviadas. Te quedan ${quedan} por enviar: toca Enviar otra vez.`, true);
+}
+function alVolver() {
+  if (!enviadaEn || Date.now() - enviadaEn <= 1500) return;
+  enviadaEn = 0;
+  if (enviando <= 1) terminarEnvio();                  // una sola: se limpia sola, como siempre
+  else {                                               // varias: primero confirma, para no perderlas por error
+    $("confirmaTxt").textContent = `¿Ya enviaste tus ${enviando} quinielas por WhatsApp?`;
+    $("confirma").hidden = false;
+    $("confirma").scrollIntoView({ block: "center" });
+  }
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) alVolver(); });
+window.addEventListener("focus", alVolver);
+$("aleatorio").onclick = aleatorio;
+$("guardarBtn").onclick = () => { if (guardarActual()) aviso("✓ Guardada. Llena otra o toca Enviar.", true); };
+$("enviar").onclick = enviarTodas;
+$("nueva").onclick = limpiar;
+$("cSi").onclick = terminarEnvio;
+$("cNo").onclick = () => { enviando = 0; $("confirma").hidden = true; aviso("Toca Enviar para intentarlo otra vez."); };
+
+pintarGuardadas();
+cargar();
+</script>
+</body>
+</html>
